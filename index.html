@@ -271,7 +271,48 @@ input,textarea{font-family:inherit;}
 .form-step{display:none;animation:stepIn 0.6s var(--ease);}
 .form-step.active{display:block;}
 @keyframes stepIn{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+#musicBtn{
+    position:fixed;
+    top:20px;
+    right:20px;
 
+    width:50px;
+    height:50px;
+
+    border-radius:50%;
+    border:none;
+
+    background:rgba(255,255,255,.8);
+
+    backdrop-filter:blur(10px);
+
+    font-size:22px;
+
+    z-index:9999;
+
+    cursor:pointer;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+#musicBtn{
+    animation:spin 15s linear infinite;
+}
+
+#musicBtn.pause{
+    animation-play-state:paused;
+}
+
+@keyframes spin{
+
+from{
+transform:rotate(0deg);
+}
+
+to{
+transform:rotate(360deg);
+}
+
+}
 .step-title{
   font-family:var(--font-display-cn);font-size:22px;font-weight:700;color:var(--plum);
   margin-bottom:6px;display:flex;align-items:center;gap:10px;
@@ -422,8 +463,11 @@ textarea:focus{border-color:var(--rose);box-shadow:0 0 0 4px rgba(232,93,117,0.1
 </style>
 
 </head>
-<body>
 
+<body>
+<audio id="bgMusic" loop preload="auto">
+    <source src="music/bgm.mp3" type="audio/mpeg">
+</audio>
 <!-- 页面载入动画 -->
 <div id="loader">
   <div class="loader-heart"></div>
@@ -452,6 +496,7 @@ textarea:focus{border-color:var(--rose);box-shadow:0 0 0 4px rgba(232,93,117,0.1
     <p class="hero-sub">因为每一次见你，都值得提前预约。</p>
     <button class="hero-cta" id="startBtn">开始预约 →</button>
   </div>
+  <button id="musicBtn">🎵</button>
   <div class="hero-scroll-hint"><span>向 下 探 索</span><span class="line"></span></div>
 </section>
 
@@ -667,6 +712,26 @@ function tryLoadPhoto(index){
     attempt();
   });
 }
+const music = document.getElementById("bgMusic");
+const btn = document.getElementById("musicBtn");
+
+btn.addEventListener("click", () => {
+    if (music.paused) {
+        music.play().catch(() => {});
+    } else {
+        music.pause();
+    }
+});
+
+music.addEventListener("play", () => {
+    btn.innerHTML = "🎵";
+    btn.classList.remove("pause");
+});
+
+music.addEventListener("pause", () => {
+    btn.innerHTML = "🔇";
+    btn.classList.add("pause");
+});
 
 function shuffle(arr){
   const a = arr.slice();
@@ -745,6 +810,11 @@ attachRipple(document.getElementById("startBtn"));
    页面切换：首页 → 表单页（邀请函展开转场）
    ================================================================ */
 document.getElementById("startBtn").addEventListener("click", ()=>{
+  const music = document.getElementById("bgMusic");
+
+music.volume = 0.35;
+
+music.play().catch(()=>{});
   const trans = document.getElementById("envelope-transition");
   trans.classList.add("show");
   setTimeout(()=>{
