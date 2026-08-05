@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Noto+Serif+SC:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <style>
 /* ============ 基础重置 ============ */
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -122,8 +122,10 @@ input,textarea{font-family:inherit;}
 .photo-slot-1{ top:9%; left:5%; width:clamp(170px,30vw,420px); height:clamp(220px,38vh,480px); --rot:-4deg; animation-delay:0s; }
 .photo-slot-2{ top:7%; right:6%; width:clamp(150px,24vw,340px); height:clamp(190px,30vh,380px); --rot:3deg; }
 .photo-slot-3{ bottom:8%; left:20%; width:clamp(160px,27vw,380px); height:clamp(200px,32vh,400px); --rot:-2deg; }
+.photo-slot-4{ bottom:9%; right:8%; width:clamp(140px,20vw,300px); height:clamp(170px,25vh,320px); --rot:5deg; }
 .photo-slot-2 .photo-float-frame{animation-delay:1.4s;}
 .photo-slot-3 .photo-float-frame{animation-delay:2.8s;}
+.photo-slot-4 .photo-float-frame{animation-delay:4.2s;}
 .hero-overlay{
   position:absolute;inset:0;z-index:2;
   background:
@@ -415,6 +417,7 @@ textarea:focus{border-color:var(--rose);box-shadow:0 0 0 4px rgba(232,93,117,0.1
   .photo-slot-1{ top:6%; left:4%; width:44vw; height:24vh; }
   .photo-slot-2{ top:5%; right:4%; width:38vw; height:20vh; }
   .photo-slot-3{ bottom:6%; left:14%; width:42vw; height:22vh; }
+  .photo-slot-4{ bottom:22%; right:10%; width:36vw; height:18vh; }
 }
 </style>
 
@@ -440,6 +443,7 @@ textarea:focus{border-color:var(--rose);box-shadow:0 0 0 4px rgba(232,93,117,0.1
     <div class="photo-float photo-slot-1" id="photoSlot0"><div class="photo-float-frame"><img alt="约会回忆"></div></div>
     <div class="photo-float photo-slot-2" id="photoSlot1"><div class="photo-float-frame"><img alt="约会回忆"></div></div>
     <div class="photo-float photo-slot-3" id="photoSlot2"><div class="photo-float-frame"><img alt="约会回忆"></div></div>
+    <div class="photo-float photo-slot-4" id="photoSlot3"><div class="photo-float-frame"><img alt="约会回忆"></div></div>
   </div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
@@ -556,10 +560,10 @@ textarea:focus{border-color:var(--rose);box-shadow:0 0 0 4px rgba(232,93,117,0.1
    ✉️ EmailJS 配置区（请在此处填入你自己的参数）
    ================================================================ */
 const EMAILJS_CONFIG = {
-  PUBLIC_KEY:  "1vQyKm0t5v0RvyGer",     // EmailJS 公钥
-  SERVICE_ID:  "service_5js6x7x",     // EmailJS 服务 ID
-  TEMPLATE_ID: "template_po08qhf",    // EmailJS 模板 ID
-  TO_EMAIL:    "kaizhengkhoo4162@gmail.com" // 接收预约通知的邮箱
+  PUBLIC_KEY:  "YOUR_PUBLIC_KEY",     // EmailJS 公钥
+  SERVICE_ID:  "YOUR_SERVICE_ID",     // EmailJS 服务 ID
+  TEMPLATE_ID: "YOUR_TEMPLATE_ID",    // EmailJS 模板 ID
+  TO_EMAIL:    "your-email@example.com" // 接收预约通知的邮箱
 };
 if (window.emailjs) { emailjs.init({ publicKey: EMAILJS_CONFIG.PUBLIC_KEY }); }
 
@@ -640,12 +644,13 @@ for(let i=0;i<6;i++) setTimeout(spawnHeart, i*300);
 /* ================================================================
    首页背景：多张照片同时漂浮，每 5 秒随机切换一批
    ================================================================ */
-const PHOTO_COUNT = 8; // images/1.jpeg ~ images/7.jpeg，可自行增减数量
+const PHOTO_COUNT = 20; // images/1.jpeg ~ images/20.jpeg，可自行增减数量
 const PHOTO_EXTS = ["jpeg","jpg","png","webp"];
 const photoTiles = [
   document.getElementById("photoSlot0"),
   document.getElementById("photoSlot1"),
   document.getElementById("photoSlot2"),
+  document.getElementById("photoSlot3"),
 ];
 
 function tryLoadPhoto(index){
